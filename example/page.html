@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Animação</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:100%;height:100%;overflow:hidden;background:#04040a;font-family:'Segoe UI',system-ui,sans-serif}
+canvas#bg{position:absolute;inset:0;z-index:0}
+
+.aurora{position:absolute;inset:0;z-index:1;pointer-events:none;overflow:hidden}
+.aurora span{position:absolute;border-radius:50%;opacity:0.18;filter:blur(80px);animation:drift 14s ease-in-out infinite alternate}
+.aurora span:nth-child(1){width:600px;height:400px;background:#7c3aed;top:-100px;left:-100px;animation-duration:13s}
+.aurora span:nth-child(2){width:500px;height:500px;background:#0ea5e9;top:30%;right:-150px;animation-duration:17s;animation-delay:-4s}
+.aurora span:nth-child(3){width:400px;height:350px;background:#10b981;bottom:-80px;left:30%;animation-duration:11s;animation-delay:-7s}
+.aurora span:nth-child(4){width:350px;height:400px;background:#f59e0b;bottom:10%;left:-80px;animation-duration:15s;animation-delay:-2s;opacity:0.1}
+@keyframes drift{0%{transform:translate(0,0) scale(1)}100%{transform:translate(60px,40px) scale(1.2)}}
+
+.grid{position:absolute;inset:0;z-index:2;pointer-events:none;
+  background-image:linear-gradient(rgba(255,255,255,0.025) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.025) 1px,transparent 1px);
+  background-size:60px 60px;
+  mask-image:radial-gradient(ellipse 80% 80% at 50% 50%,black 30%,transparent 100%)}
+
+.center{position:absolute;inset:0;z-index:10;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:2rem}
+
+.badge{display:inline-flex;align-items:center;gap:8px;font-size:12px;letter-spacing:0.12em;text-transform:uppercase;color:#a78bfa;background:rgba(124,58,237,0.15);border:1px solid rgba(124,58,237,0.3);padding:6px 16px;border-radius:20px;margin-bottom:2.5rem;opacity:0;animation:fadeUp 0.7s 0.3s ease forwards}
+.badge-dot{width:6px;height:6px;border-radius:50%;background:#a78bfa;animation:blink 1.4s ease-in-out infinite}
+@keyframes blink{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.4;transform:scale(0.7)}}
+
+h1{font-size:clamp(2.8rem,6vw,5.5rem);font-weight:700;line-height:1.08;letter-spacing:-0.03em;color:#f8fafc;opacity:0;animation:fadeUp 0.8s 0.55s ease forwards}
+h1 .line{display:block;overflow:hidden}
+h1 .line span{display:inline-block;animation:slideIn 0.9s ease forwards;opacity:0}
+h1 .line:nth-child(1) span{animation-delay:0.6s}
+h1 .line:nth-child(2) span{animation-delay:0.8s}
+h1 .gradient-text{background:linear-gradient(135deg,#a78bfa 0%,#38bdf8 50%,#34d399 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+@keyframes slideIn{0%{transform:translateY(100%);opacity:0}100%{transform:translateY(0);opacity:1}}
+
+p.sub{font-size:clamp(1rem,2vw,1.25rem);color:rgba(248,250,252,0.5);margin-top:1.5rem;max-width:520px;line-height:1.65;opacity:0;animation:fadeUp 0.8s 1.1s ease forwards}
+@keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+
+.ctas{display:flex;gap:14px;margin-top:2.5rem;opacity:0;animation:fadeUp 0.8s 1.35s ease forwards;flex-wrap:wrap;justify-content:center}
+.btn-p{padding:13px 28px;background:linear-gradient(135deg,#7c3aed,#0ea5e9);border:none;border-radius:10px;color:#fff;font-size:15px;font-weight:600;cursor:pointer;letter-spacing:0.01em;position:relative;overflow:hidden;transition:transform 0.2s,opacity 0.2s}
+.btn-p::after{content:'';position:absolute;inset:0;background:rgba(255,255,255,0);transition:background 0.2s}
+.btn-p:hover{transform:translateY(-2px);opacity:0.92}
+.btn-p:hover::after{background:rgba(255,255,255,0.08)}
+.btn-s{padding:13px 28px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);border-radius:10px;color:rgba(248,250,252,0.85);font-size:15px;font-weight:500;cursor:pointer;letter-spacing:0.01em;transition:background 0.2s,border-color 0.2s,transform 0.2s}
+.btn-s:hover{background:rgba(255,255,255,0.1);border-color:rgba(255,255,255,0.22);transform:translateY(-2px)}
+
+.product-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem;margin-top:2rem;width:min(100%,1200px)}
+.product-card{background:rgba(255,255,255,0.14);border:1px solid rgba(255,255,255,0.22);border-radius:24px;padding:1.5rem;text-align:left;box-shadow:0 30px 80px rgba(0,0,0,0.18);backdrop-filter:blur(20px) saturate(180%)}
+.product-card span{display:inline-flex;padding:0.35rem 0.8rem;border-radius:999px;font-size:0.8rem;letter-spacing:0.08em;text-transform:uppercase;background:rgba(255,255,255,0.08);color:#cbd5e1}
+.product-card h3{margin:0.85rem 0 0.65rem;font-size:1.25rem;color:#f8fafc}
+.product-card p{margin:0;color:rgba(248,250,252,0.78);line-height:1.6}
+
+.stats{display:flex;gap:3rem;margin-top:4rem;opacity:0;animation:fadeUp 0.8s 1.6s ease forwards;flex-wrap:wrap;justify-content:center}
+.stat{text-align:center}
+.stat-num{font-size:1.8rem;font-weight:700;color:#f8fafc;letter-spacing:-0.03em;counter-reset:num var(--v)}
+.stat-lbl{font-size:12px;letter-spacing:0.1em;text-transform:uppercase;color:rgba(248,250,252,0.35);margin-top:4px}
+.stat-sep{width:1px;height:40px;background:rgba(255,255,255,0.1);align-self:center}
+
+.orb{position:absolute;border-radius:50%;border:1px solid rgba(255,255,255,0.08);pointer-events:none;z-index:3;animation:orb-spin linear infinite}
+.orb-1{width:360px;height:360px;top:50%;left:50%;transform:translate(-50%,-50%);animation-duration:28s;border-color:rgba(124,58,237,0.15)}
+.orb-2{width:520px;height:520px;top:50%;left:50%;transform:translate(-50%,-50%);animation-duration:44s;animation-direction:reverse;border-color:rgba(14,165,233,0.1)}
+.orb-3{width:700px;height:700px;top:50%;left:50%;transform:translate(-50%,-50%);animation-duration:60s;border-color:rgba(52,211,153,0.07)}
+.orb-dot{position:absolute;width:5px;height:5px;border-radius:50%;background:#a78bfa;top:0;left:50%;transform:translate(-50%,-50%)}
+.orb-2 .orb-dot{background:#38bdf8}
+.orb-3 .orb-dot{background:#34d399;width:4px;height:4px}
+@keyframes orb-spin{to{transform:translate(-50%,-50%) rotate(360deg)}}
+
+.cursor-glow{position:absolute;width:300px;height:300px;border-radius:50%;pointer-events:none;z-index:4;opacity:0.12;background:radial-gradient(circle,#a78bfa,transparent 70%);transform:translate(-50%,-50%);transition:opacity 0.3s}
+</style>
+</head>
+<body>
+<canvas id="bg"></canvas>
+
+<div class="aurora">
+  <span></span><span></span><span></span><span></span>
+</div>
+<div class="grid"></div>
+
+<div class="orb orb-1"><div class="orb-dot"></div></div>
+<div class="orb orb-2"><div class="orb-dot"></div></div>
+<div class="orb orb-3"><div class="orb-dot"></div></div>
+
+<div class="cursor-glow" id="glow"></div>
+
+<div class="center">
+  <div class="badge"><span class="badge-dot"></span>Vitrine AuraTech</div>
+
+  <h1>
+    <div class="line"><span>Seleção de</span></div>
+    <div class="line"><span class="gradient-text">produtos reais</span></div>
+  </h1>
+
+  <p class="sub">Exemplos de dispositivos reais disponíveis no mercado: smartphones, laptops, consoles de games e desktops profissionais.</p>
+
+  <div class="product-grid">
+    <article class="product-card">
+      <span>Celular</span>
+      <h3>Apple iPhone 15 Pro</h3>
+      <p>Tela Super Retina XDR de 6,1", chip A17 Pro, câmera tripla com modo Cine e acabamento em titânio.</p>
+    </article>
+    <article class="product-card">
+      <span>Celular</span>
+      <h3>Samsung Galaxy S24 Ultra</h3>
+      <p>Display AMOLED 2X de 6,8", S Pen integrada, câmera 200MP e bateria para o dia todo.</p>
+    </article>
+    <article class="product-card">
+      <span>Laptop</span>
+      <h3>MacBook Air 15" (M2)</h3>
+      <p>Notebook leve com chip Apple M2, bateria de longa duração e tela Liquid Retina brilhante.</p>
+    </article>
+    <article class="product-card">
+      <span>Laptop</span>
+      <h3>Dell XPS 15</h3>
+      <p>Ultrabook com processador Intel Core de 13ª geração, tela OLED e design premium em alumínio.</p>
+    </article>
+    <article class="product-card">
+      <span>Console</span>
+      <h3>Sony PlayStation 5</h3>
+      <p>Console de próxima geração com gráficos 4K, SSD ultrarrápido e biblioteca de exclusivos.</p>
+    </article>
+    <article class="product-card">
+      <span>Console</span>
+      <h3>Microsoft Xbox Series X</h3>
+      <p>Potência para jogos em 4K, Quick Resume e suporte ao Xbox Game Pass.</p>
+    </article>
+  </div>
+</div>
+
+<script>
+const canvas = document.getElementById('bg');
+const ctx = canvas.getContext('2d');
+let W, H, particles = [], mouse = {x: -9999, y: -9999};
+
+function resize() {
+  W = canvas.width = window.innerWidth;
+  H = canvas.height = window.innerHeight;
+}
+resize();
+window.addEventListener('resize', resize);
+
+const N = 90;
+function mkP() {
+  return {
+    x: Math.random() * W, y: Math.random() * H,
+    vx: (Math.random() - 0.5) * 0.35,
+    vy: (Math.random() - 0.5) * 0.35,
+    r: Math.random() * 1.5 + 0.4,
+    a: Math.random()
+  };
+}
+for (let i = 0; i < N; i++) particles.push(mkP());
+
+function draw() {
+  ctx.clearRect(0, 0, W, H);
+  const LINK = 130;
+  for (let i = 0; i < N; i++) {
+    const p = particles[i];
+    p.x += p.vx; p.y += p.vy;
+    if (p.x < 0) p.x = W; if (p.x > W) p.x = 0;
+    if (p.y < 0) p.y = H; if (p.y > H) p.y = 0;
+    const dx = p.x - mouse.x, dy = p.y - mouse.y;
+    const md = Math.sqrt(dx*dx+dy*dy);
+    if (md < 120) { p.x += dx/md*0.6; p.y += dy/md*0.6; }
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, p.r, 0, Math.PI*2);
+    ctx.fillStyle = `rgba(167,139,250,${0.35 + p.a*0.3})`;
+    ctx.fill();
+  }
+  for (let i = 0; i < N; i++) {
+    for (let j = i+1; j < N; j++) {
+      const dx = particles[i].x - particles[j].x;
+      const dy = particles[i].y - particles[j].y;
+      const d = Math.sqrt(dx*dx+dy*dy);
+      if (d < LINK) {
+        ctx.beginPath();
+        ctx.moveTo(particles[i].x, particles[i].y);
+        ctx.lineTo(particles[j].x, particles[j].y);
+        ctx.strokeStyle = `rgba(167,139,250,${0.12*(1-d/LINK)})`;
+        ctx.lineWidth = 0.6;
+        ctx.stroke();
+      }
+    }
+    const dx = particles[i].x - mouse.x, dy = particles[i].y - mouse.y;
+    const d = Math.sqrt(dx*dx+dy*dy);
+    if (d < 160) {
+      ctx.beginPath();
+      ctx.moveTo(particles[i].x, particles[i].y);
+      ctx.lineTo(mouse.x, mouse.y);
+      ctx.strokeStyle = `rgba(56,189,248,${0.18*(1-d/160)})`;
+      ctx.lineWidth = 0.7;
+      ctx.stroke();
+    }
+  }
+  requestAnimationFrame(draw);
+}
+draw();
+
+const glow = document.getElementById('glow');
+document.addEventListener('mousemove', e => {
+  mouse.x = e.clientX; mouse.y = e.clientY;
+  glow.style.left = e.clientX + 'px';
+  glow.style.top  = e.clientY + 'px';
+  glow.style.opacity = '0.13';
+});
+document.addEventListener('mouseleave', () => { glow.style.opacity = '0'; });
+
+function animCount(el, end, dur, suffix) {
+  const start = performance.now();
+  function step(now) {
+    const t = Math.min((now - start) / dur, 1);
+    const ease = 1 - Math.pow(1 - t, 3);
+    el.textContent = Math.round(ease * end).toLocaleString('pt-BR') + (suffix||'');
+    if (t < 1) requestAnimationFrame(step);
+  }
+  requestAnimationFrame(step);
+}
+
+setTimeout(() => {
+  animCount(document.getElementById('s1'), 2847, 1800, '+');
+  animCount(document.getElementById('s2'), 94200, 2200, '+');
+  animCount(document.getElementById('s3'), 99.9, 2000, '%');
+}, 1700);
+</script>
+</body>
+</html>

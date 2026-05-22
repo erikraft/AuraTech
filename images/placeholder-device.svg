@@ -1,0 +1,14 @@
+<svg width="720" height="540" viewBox="0 0 720 540" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#eef2ff" />
+      <stop offset="100%" stop-color="#f8fafc" />
+    </linearGradient>
+  </defs>
+  <rect width="720" height="540" rx="40" fill="url(#bg)" />
+  <rect x="120" y="110" width="480" height="320" rx="30" fill="#ffffff" opacity="0.85" />
+  <path d="M190 170h340v220H190z" fill="none" stroke="#c7d2fe" stroke-width="14" rx="24" />
+  <circle cx="360" cy="330" r="32" fill="#e2e8f0" />
+  <text x="360" y="280" text-anchor="middle" fill="#64748b" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="40" font-weight="700">Imagem</text>
+  <text x="360" y="328" text-anchor="middle" fill="#94a3b8" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="24">Local</text>
+</svg>
